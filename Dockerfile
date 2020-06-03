@@ -59,7 +59,7 @@ RUN set -ex \
   
   RUN set -ex \
 	&& apk add --no-cache --virtual \
-        libarchive-tools tar xz unarj unrar gzip brotli p7zip bzip2 unzip lz4 lrzip lzip lzop zip zstd 
+        libarchive-tools tar xz unarj unrar gzip brotli p7zip bzip2 unzip lz4 lrzip lzip zip zstd 
   RUN set -ex apk add --no-cache --virtual lzop@testing
   #RUN set -ex \
   #	&& apk add --no-cache --virtual -X http://dl-cdn.alpinelinux.org/alpine/edge/testing lzop
