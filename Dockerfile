@@ -1,5 +1,4 @@
 FROM alpine:3.12
-RUN apk add --no-cache gpg brotli
 
 ENV LANG C.UTF-8
 
