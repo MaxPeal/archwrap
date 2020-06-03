@@ -4,7 +4,7 @@ ENV LANG C.UTF-8
 
 RUN pacman -Syy archlinux-keyring --noconfirm && pacman -Syu --noconfirm && pacman-db-upgrade && trust extract-compat
 
-RUN pacman -S --noconfirm --needed base-devel git subversion; \
+RUN pacman -S --noconfirm --needed base-devel wget curl git subversion; \
 groupadd -r makepkg; useradd -r -g makepkg makepkg; echo 'makepkg ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/makepkg;
 
 RUN git clone https://aur.archlinux.org/package-query.git; \
@@ -31,7 +31,7 @@ RUN set -ex \
 	&& pacman -Syu --noconfirm \
 		gnupg \
 		tar \
-		xz \
+		xz wget \
 	\
 	&& wget -O archwrap.tar.gz "https://github.com/vaeth/archwrap/archive/v$P_VERSION.tar.gz" \
 	&& wget -O archwrap.tar.gz.asc "https://github.com/vaeth/archwrap/releases/download/v$P_VERSION/archwrap-$P_VERSION.tar.gz.asc" \
@@ -52,7 +52,7 @@ RUN set -ex \
 	&& pacman -Syu --noconfirm \
 		gnupg \
 		tar \
-		xz \
+		xz wget \
 	\
 	&& wget -O push.tar.gz "https://github.com/vaeth/push/archive/v$P_VERSION.tar.gz" \
 	&& wget -O push.tar.gz.asc "https://github.com/vaeth/push/releases/download/v$P_VERSION/push-$P_VERSION.tar.gz.asc" \
