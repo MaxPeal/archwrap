@@ -16,7 +16,7 @@ RUN set -ex \
 		tar \
 		xz \
 	\
-	&& wget -O archwrap.tar.gz "https://github.com/vaeth/archwrap/releases/download/v$P_VERSION/archwrap-$P_VERSION.tar.gz" \
+	&& wget -O archwrap.tar.gz "https://github.com/vaeth/archwrap/archive/v$P_VERSION.tar.gz" \
 	&& wget -O archwrap.tar.gz.asc "https://github.com/vaeth/archwrap/releases/download/v$P_VERSION/archwrap-$P_VERSION.tar.gz.asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
 	&& gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
@@ -37,7 +37,7 @@ RUN set -ex \
 		tar \
 		xz \
 	\
-	&& wget -O push.tar.gz "https://github.com/vaeth/push/releases/download/v$P_VERSION/push-$P_VERSION.tar.gz" \
+	&& wget -O push.tar.gz "https://github.com/vaeth/push/archive/v$P_VERSION.tar.gz" \
 	&& wget -O push.tar.gz.asc "https://github.com/vaeth/push/releases/download/v$P_VERSION/push-$P_VERSION.tar.gz.asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
 	&& gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
