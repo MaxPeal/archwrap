@@ -50,7 +50,8 @@ RUN set -ex \
 	&& rm push.tar.gz
   
   RUN set -ex \
-	&& apk add --no-cache --virtual .fetch-deps \
-		gnupg \
-		tar \
-		xz gzip bzip2 brotli zstd p7zip-full bzip2 unzip xz-utils liblz4-tool lrzip lzip lzop rar zip zstd zopfli lzma arj rzip
+	&& apk add --no-cache --virtual \
+        libarchive-tools tar xz unarj unrar gzip brotli p7zip bzip2 unzip lz4 lrzip lzip lzop zip zstd
+  RUN set -ex \
+	&& apk add --no-cache --virtual -X http://dl-cdn.alpinelinux.org/alpine/edge/testing lzop
+
