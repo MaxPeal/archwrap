@@ -4,8 +4,26 @@ FROM archlinux
 
 RUN pacman -Syy archlinux-keyring --noconfirm && pacman -Syu --noconfirm && pacman-db-upgrade && trust extract-compat
 
-RUN pacman -S --noconfirm --needed base-devel wget curl git subversion; \
-groupadd -r makepkg; useradd -r -g makepkg makepkg; echo 'makepkg ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/makepkg;
+# base64 -w 0 /usr/local/bin/build-install-aur.sh
+IyEvYmluL3NoCnNldCAtdgpzZXQgLWV4Cmdyb3VwYWRkIC1yIG1ha2Vwa2c7IHVzZXJhZGQgLXIgLWcgbWFrZXBrZyBtYWtlcGtnOyBlY2hvICdtYWtlcGtnIEFMTD0oQUxMKSBOT1BBU1NXRDogQUxMJyA+IC9ldGMvc3Vkb2Vycy5kL21ha2Vwa2c7ClRCVUlMRD0kKHN1ZG8gLXUgbWFrZXBrZyBta3RlbXAgLS1kaXJlY3RvcnkgL3RtcC9idWlsZC10bXAuWFhYWFhYWFhYWCkKc3VkbyAtdSBtYWtlcGtnIGdpdCBjbG9uZSBodHRwczovL2F1ci5hcmNobGludXgub3JnL3BhY2thZ2UtcXVlcnkuZ2l0ICRUQlVJTEQ7IApjZCAkVEJVSUxEOyAKY2hvd24gLVIgbWFrZXBrZyAuOyAKZ3JlcCAuIC5TUkNJTkZPIFBLR0JVSUxECnN1ZG8gLXUgbWFrZXBrZyBtYWtlcGtnIC1zaSAtLW5vY29uZmlybTsgCmNkIC90bXAgJiYgcm0gLXJmICRUQlVJTEQK
+#echo "IyEvYmluL3NoCnNldCAtdgpzZXQgLWV4Cmdyb3VwYWRkIC1yIG1ha2Vwa2c7IHVzZXJhZGQgLXIgLWcgbWFrZXBrZyBtYWtlcGtnOyBlY2hvICdtYWtlcGtnIEFMTD0oQUxMKSBOT1BBU1NXRDogQUxMJyA+IC9ldGMvc3Vkb2Vycy5kL21ha2Vwa2c7ClRCVUlMRD0kKHN1ZG8gLXUgbWFrZXBrZyBta3RlbXAgLS1kaXJlY3RvcnkgL3RtcC9idWlsZC10bXAuWFhYWFhYWFhYWCkKc3VkbyAtdSBtYWtlcGtnIGdpdCBjbG9uZSBodHRwczovL2F1ci5hcmNobGludXgub3JnL3BhY2thZ2UtcXVlcnkuZ2l0ICRUQlVJTEQ7IApjZCAkVEJVSUxEOyAKY2hvd24gLVIgbWFrZXBrZyAuOyAKZ3JlcCAuIC5TUkNJTkZPIFBLR0JVSUxECnN1ZG8gLXUgbWFrZXBrZyBtYWtlcGtnIC1zaSAtLW5vY29uZmlybTsgCmNkIC90bXAgJiYgcm0gLXJmICRUQlVJTEQKIyEvYmluL3NoCnNldCAtdgpzZXQgLWV4Cmdyb3VwYWRkIC1yIG1ha2Vwa2c7IHVzZXJhZGQgLXIgLWcgbWFrZXBrZyBtYWtlcGtnOyBlY2hvICdtYWtlcGtnIEFMTD0oQUxMKSBOT1BBU1NXRDogQUxMJyA+IC9ldGMvc3Vkb2Vycy5kL21ha2Vwa2c7ClRCVUlMRD0kKHN1ZG8gLXUgbWFrZXBrZyBta3RlbXAgLS1kaXJlY3RvcnkgL3RtcC9idWlsZC10bXAuWFhYWFhYWFhYWCkKc3VkbyAtdSBtYWtlcGtnIGdpdCBjbG9uZSBodHRwczovL2F1ci5hcmNobGludXgub3JnL3BhY2thZ2UtcXVlcnkuZ2l0ICRUQlVJTEQ7IApjZCAkVEJVSUxEOyAKY2hvd24gLVIgbWFrZXBrZyAuOyAKZ3JlcCAuIC5TUkNJTkZPIFBLR0JVSUxECnN1ZG8gLXUgbWFrZXBrZyBtYWtlcGtnIC1zaSAtLW5vY29uZmlybTsgCmNkIC90bXAgJiYgcm0gLXJmICRUQlVJTEQK" | base64 -d > /usr/local/bin/build-install-aur.sh
+
+RUN echo "#!/bin/sh"; \
+echo "set -v"; \
+echo "groupadd -r makepkg; useradd -r -g makepkg makepkg; echo 'makepkg ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/makepkg;"
+echo "TBUILD=$(sudo -u makepkg mktemp --directory /tmp/build-tmp.XXXXXXXXXX)"; \
+echo "sudo -u makepkg git clone https://aur.archlinux.org/package-query.git $TBUILD;"; \
+echo "cd $TBUILD;"; \
+echo "chown -R makepkg .;"; \
+echo "grep . .SRCINFO PKGBUILD"; \
+echo "sudo -u makepkg makepkg -si --noconfirm;"; \
+echo "cd /tmp && rm -rf $TBUILD"; \
+chmod 755 
+
+
+RUN pacman -S --noconfirm --needed base-devel wget curl git subversion;
+#RUN pacman -S --noconfirm --needed base-devel wget curl git subversion; \
+#groupadd -r makepkg; useradd -r -g makepkg makepkg; echo 'makepkg ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/makepkg;
 
 RUN cd /tmp && sudo -u makepkg git clone https://aur.archlinux.org/package-query.git; \
 cd package-query; \
