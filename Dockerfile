@@ -2,9 +2,17 @@ FROM alpine:3.12
 
 ENV LANG C.UTF-8
 
+RUN (echo "@edge http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories ; \
+echo "@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories ; \
+echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories ; \
+echo "############" ; \
+cat /etc/apk/repositories ; \
+echo "############" ; )
+
+
 # install ca-certificates so that HTTPS works consistently
 # other runtime dependencies for Python are installed later
-RUN apk add --no-cache ca-certificates
+RUN apk --no-cache upgrade && apk add --no-cache ca-certificates
 
 #ENV GPG_KEY %%PLACEHOLDER%%
 ENV GPG_KEY 123D62DD87E7A81CA090CD65D18FC49C6F3A8EC0
@@ -52,7 +60,8 @@ RUN set -ex \
   
   RUN set -ex \
 	&& apk add --no-cache --virtual \
-        libarchive-tools tar xz unarj unrar gzip brotli p7zip bzip2 unzip lz4 lrzip lzip lzop zip zstd
-  RUN set -ex \
-	&& apk add --no-cache --virtual -X http://dl-cdn.alpinelinux.org/alpine/edge/testing lzop
+        libarchive-tools tar xz unarj unrar gzip brotli p7zip bzip2 unzip lz4 lrzip lzip lzop zip zstd 
+  RUN set -ex apk add --no-cache --virtual lzop@testing
+  #RUN set -ex \
+  #	&& apk add --no-cache --virtual -X http://dl-cdn.alpinelinux.org/alpine/edge/testing lzop
 
