@@ -1,6 +1,6 @@
 FROM archlinux
 
-ENV LANG C.UTF-8
+#archlinux BUG### ENV LANG C.UTF-8
 
 RUN pacman -Syy archlinux-keyring --noconfirm && pacman -Syu --noconfirm && pacman-db-upgrade && trust extract-compat
 
