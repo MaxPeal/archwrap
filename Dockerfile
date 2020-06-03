@@ -19,7 +19,7 @@ ENV GPG_KEY 123D62DD87E7A81CA090CD65D18FC49C6F3A8EC0
 ENV P_VERSION 11.3
 
 RUN set -ex \
-	&& apk add --no-cache --virtual .fetch-deps \
+	&& apk add --no-cache \
 		gnupg \
 		tar \
 		xz \
@@ -40,7 +40,7 @@ ENV GPG_KEY 123D62DD87E7A81CA090CD65D18FC49C6F3A8EC0
 ENV P_VERSION 3.1
 
 RUN set -ex \
-	&& apk add --no-cache --virtual .fetch-deps \
+	&& apk add --no-cache \
 		gnupg \
 		tar \
 		xz \
@@ -58,9 +58,9 @@ RUN set -ex \
 	&& rm push.tar.gz
   
   RUN set -ex \
-	&& apk add --no-cache --virtual \
+	&& apk add --no-cache \
         libarchive-tools tar xz unarj unrar gzip brotli p7zip bzip2 unzip lz4 lrzip lzip zip zstd 
-  RUN set -ex apk add --no-cache --virtual lzop@testing
+  RUN set -ex apk add --no-cache lzop@testing
   #RUN set -ex \
   #	&& apk add --no-cache --virtual -X http://dl-cdn.alpinelinux.org/alpine/edge/testing lzop
 
