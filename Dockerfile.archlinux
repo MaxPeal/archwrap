@@ -71,3 +71,4 @@ RUN set -ex \
         libarchive tar xz unarj unrar gzip brotli p7zip bzip2 unzip lz4 lrzip lzip zip zstd lzop
   #RUN set -ex \
   #	&& apk add --no-cache --virtual -X http://dl-cdn.alpinelinux.org/alpine/edge/testing lzop
+
