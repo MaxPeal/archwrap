@@ -19,8 +19,9 @@ RUN set -ex \
 	&& wget -O archwrap.tar.gz "https://github.com/vaeth/archwrap/archive/v$P_VERSION.tar.gz" \
 	&& wget -O archwrap.tar.gz.asc "https://github.com/vaeth/archwrap/releases/download/v$P_VERSION/archwrap-$P_VERSION.tar.gz.asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
-	&& gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
-	&& gpg --batch --verify archwrap.tar.gz.asc archwrap.tar.gz \
+	&& gpg --batch --fingerprint --fingerprint --verbose --verbose --keyserver keyserver.ubuntu.com --keyserver hkp://keyserver.ubuntu.com:80  --recv-keys "$GPG_KEY" \
+	&& echo "$GPG_KEY:6:" | gpg --batch --import-ownertrust - \
+	&& gpg --batch --verbose --verify archwrap.tar.gz.asc archwrap.tar.gz \
 	&& { command -v gpgconf > /dev/null && gpgconf --kill all || :; } \
 	&& rm -rf "$GNUPGHOME" archwrap.tar.gz.asc \
 	&& mkdir -p /usr/share/archwrap \
@@ -40,8 +41,9 @@ RUN set -ex \
 	&& wget -O push.tar.gz "https://github.com/vaeth/push/archive/v$P_VERSION.tar.gz" \
 	&& wget -O push.tar.gz.asc "https://github.com/vaeth/push/releases/download/v$P_VERSION/push-$P_VERSION.tar.gz.asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
-	&& gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
-	&& gpg --batch --verify push.tar.gz.asc push.tar.gz \
+	&& gpg --batch --fingerprint --fingerprint --verbose --verbose --keyserver keyserver.ubuntu.com --keyserver hkp://keyserver.ubuntu.com:80  --recv-keys "$GPG_KEY" \
+	&& echo "$GPG_KEY:6:" | gpg --batch --import-ownertrust - \
+	&& gpg --batch --verbose --verify push.tar.gz.asc push.tar.gz \
 	&& { command -v gpgconf > /dev/null && gpgconf --kill all || :; } \
 	&& rm -rf "$GNUPGHOME" push.tar.gz.asc \
 	&& mkdir -p /usr/local/bin \
