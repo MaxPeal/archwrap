@@ -1,0 +1,73 @@
+FROM archlinux
+
+ENV LANG C.UTF-8
+
+RUN pacman -Syy archlinux-keyring --noconfirm && pacman -Syu --noconfirm && pacman-db-upgrade && trust extract-compat
+
+RUN pacman -S --noconfirm --needed base-devel git subversion; \
+groupadd -r makepkg; useradd -r -g makepkg makepkg; echo 'makepkg ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/makepkg;
+
+RUN git clone https://aur.archlinux.org/package-query.git; \
+cd package-query; \
+chown -R makepkg .; \
+sudo -u makepkg makepkg -si --noconfirm; \
+cd ..; \
+rm -rf package-query
+
+RUN git clone https://aur.archlinux.org/pikaur.git; \
+cd pikaur; \
+chown -R makepkg .; \
+sudo -u makepkg pikaur -si --noconfirm; \
+cd ..; \
+rm -rf pikaur
+#makepkg -fsri
+
+#ENV GPG_KEY %%PLACEHOLDER%%
+ENV GPG_KEY 123D62DD87E7A81CA090CD65D18FC49C6F3A8EC0
+ENV P_VERSION 11.3
+
+#pacman -Syu --noconfirm --needed base-devel
+RUN set -ex \
+	&& pacman -Syu --noconfirm \
+		gnupg \
+		tar \
+		xz \
+	\
+	&& wget -O archwrap.tar.gz "https://github.com/vaeth/archwrap/archive/v$P_VERSION.tar.gz" \
+	&& wget -O archwrap.tar.gz.asc "https://github.com/vaeth/archwrap/releases/download/v$P_VERSION/archwrap-$P_VERSION.tar.gz.asc" \
+	&& export GNUPGHOME="$(mktemp -d)" \
+	&& gpg --batch --fingerprint --fingerprint --verbose --verbose --keyserver keyserver.ubuntu.com --keyserver hkp://keyserver.ubuntu.com:80  --recv-keys "$GPG_KEY" \
+	&& echo "$GPG_KEY:6:" | gpg --batch --import-ownertrust - \
+	&& gpg --batch --verbose --verify archwrap.tar.gz.asc archwrap.tar.gz \
+	&& { command -v gpgconf > /dev/null && gpgconf --kill all || :; } \
+	&& rm -rf "$GNUPGHOME" archwrap.tar.gz.asc \
+	&& mkdir -p /usr/share/archwrap \
+        && tar -xvzC /usr/local/bin --strip-components=2 -f archwrap.tar.gz archwrap-$P_VERSION/bin/ \
+	&& rm archwrap.tar.gz
+  
+ENV GPG_KEY 123D62DD87E7A81CA090CD65D18FC49C6F3A8EC0
+ENV P_VERSION 3.1
+
+RUN set -ex \
+	&& pacman -Syu --noconfirm \
+		gnupg \
+		tar \
+		xz \
+	\
+	&& wget -O push.tar.gz "https://github.com/vaeth/push/archive/v$P_VERSION.tar.gz" \
+	&& wget -O push.tar.gz.asc "https://github.com/vaeth/push/releases/download/v$P_VERSION/push-$P_VERSION.tar.gz.asc" \
+	&& export GNUPGHOME="$(mktemp -d)" \
+	&& gpg --batch --fingerprint --fingerprint --verbose --verbose --keyserver keyserver.ubuntu.com --keyserver hkp://keyserver.ubuntu.com:80  --recv-keys "$GPG_KEY" \
+	&& echo "$GPG_KEY:6:" | gpg --batch --import-ownertrust - \
+	&& gpg --batch --verbose --verify push.tar.gz.asc push.tar.gz \
+	&& { command -v gpgconf > /dev/null && gpgconf --kill all || :; } \
+	&& rm -rf "$GNUPGHOME" push.tar.gz.asc \
+	&& mkdir -p /usr/local/bin \
+        && tar -xvzC /usr/local/bin --strip-components=2 -f push.tar.gz push-$P_VERSION/bin/push.sh \
+	&& rm push.tar.gz
+  
+  RUN set -ex \
+	&& pacman -Syu --noconfirm \
+        libarchive tar xz unarj unrar gzip brotli p7zip bzip2 unzip lz4 lrzip lzip zip zstd lzop
+  #RUN set -ex \
+  #	&& apk add --no-cache --virtual -X http://dl-cdn.alpinelinux.org/alpine/edge/testing lzop
