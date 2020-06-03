@@ -33,8 +33,7 @@ RUN set -ex \
 	&& { command -v gpgconf > /dev/null && gpgconf --kill all || :; } \
 	&& rm -rf "$GNUPGHOME" archwrap.tar.gz.asc \
 	&& mkdir -p /usr/share/archwrap \
-	&& tar -xJC /usr/local/bin --strip-components=1 -f archwrap.tar.gz \
-  && tar -xvzC /tmp/foo --strip-components=2 -f archwrap.tar.gz archwrap-$P_VERSION/bin/ \
+        && tar -xvzC /usr/local/bin --strip-components=2 -f archwrap.tar.gz archwrap-$P_VERSION/bin/ \
 	&& rm archwrap.tar.gz
   
 ENV GPG_KEY 123D62DD87E7A81CA090CD65D18FC49C6F3A8EC0
@@ -55,7 +54,7 @@ RUN set -ex \
 	&& { command -v gpgconf > /dev/null && gpgconf --kill all || :; } \
 	&& rm -rf "$GNUPGHOME" push.tar.gz.asc \
 	&& mkdir -p /usr/local/bin \
-  && tar -xvzC /tmp/foo --strip-components=2 -f push.tar.gz push-$P_VERSION/bin/push.sh \
+        && tar -xvzC /usr/local/bin --strip-components=2 -f push.tar.gz push-$P_VERSION/bin/push.sh \
 	&& rm push.tar.gz
   
   RUN set -ex \
